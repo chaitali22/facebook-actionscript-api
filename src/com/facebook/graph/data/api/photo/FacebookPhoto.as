@@ -61,6 +61,12 @@ package com.facebook.graph.data.api.photo
 		public var link:String;
 		
 		/**
+		 * An Array of objects containing the different sized versions of Facebook Photos.
+		 * Contents contain a "source", "height" and "width" parameter.
+		 */
+		public var images:Array;
+		
+		/**
 		 * The time the photo was initially published.
 		 */
 		public var created_time:Date;
@@ -94,6 +100,14 @@ package com.facebook.graph.data.api.photo
 						
 						case "updated_time":
 							updated_time = DateUtil.parseW3CDTF( result[ property ] );
+							break;
+						
+						case "tags":
+							tags = result[ property ].data as Array;
+							break;
+						
+						case "images":
+							images = result[ property ].data as Array;
 							break;
 						
 						default:

@@ -1,73 +1,82 @@
-package com.facebook.graph.data.api.comment {
-    import com.adobe.utils.DateUtil;
-    import com.facebook.graph.data.api.user.FacebookUser;
-
-    /**
-     * A comment.
-     * @see http://developers.facebook.com/docs/reference/api/comment
-     */
-    public class FacebookComment {
-
-        /**
-         * Creates a new Comment.
-         */
-        public function FacebookComment() {
-        }
-
-        /**
-         * The time comment was initially created.
-         */
-        public var created_time:Date;
-
-        /**
-         * An object containing the ID and name of the user who posted this comment.
-         */
-        public var from:FacebookUser;
-        /**
-         * The comment ID.
-         */
-        public var id:String;
-
-        /**
-         * The number of times this comment has been liked.
-         */
-        public var likes:int;
-
-        /**
-         * The comment message.
-         */
-        public var message:String;
-
-        /**
-         * Populates the album from a decoded JSON object.
-         */
-        public function fromJSON( result:Object ):void {
-            if ( result != null ) {
-                for ( var property:String in result ) {
-                    switch ( property ) {
-                        case "from":
-                            from = new FacebookUser();
-                            from.fromJSON( result[ property ]);
-                            break;
-
-                        case "created_time":
-                            created_time = DateUtil.parseW3CDTF( result[ property ]);
-                            break;
-
-                        default:
-                            if ( hasOwnProperty( property ))
-                                this[ property ] = result[ property ];
-                            break;
-                    }
-                }
-            }
-        }
-
-        /**
-         * Provides the string value of the album.
-         */
-        public function toString():String {
-            return '[ id: ' + id + ', message: ' + message + ' ]';
-        }
-    }
+package com.facebook.graph.data.api.comment
+{
+	import com.facebook.graph.core.facebook_internal;
+	import com.facebook.graph.data.api.core.AbstractFacebookGraphObject;
+	import com.facebook.graph.data.api.user.FacebookUser;
+	
+	use namespace facebook_internal;
+	
+	/**
+	 * A comment on a Graph API object.
+	 * @see http://developers.facebook.com/docs/reference/api/comment
+	 */
+	public class FacebookComment extends AbstractFacebookGraphObject
+	{
+		/**
+		 * The timedate the comment was created.
+		 */
+		public var created_time:Date;
+		
+		/**
+		 * The comment text.
+		 */
+		public var message:String;
+		
+		/**
+		 * The user that created the comment.
+		 */
+		public var from:FacebookUser;
+		
+		/**
+		 * The number of times this comment was liked.
+		 */
+		public var likes:Number;
+		
+		/**
+		 * Creates a new FacebookComment.
+		 */
+		public function FacebookComment()
+		{
+		}
+		
+		/**
+		 * Populates and returns a new FacebookComment from a decoded JSON object.
+		 * 
+		 * @param result A decoded JSON object.
+		 * 
+		 * @return A new FacebookComment.
+		 */
+		public static function fromJSON( result:Object ):FacebookComment
+		{
+			var comment:FacebookComment = new FacebookComment();
+			comment.fromJSON( result );
+			return comment;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override protected function setPropertyValue( property:String, value:* ):void
+		{
+			switch( property )
+			{
+				case FacebookCommentField.FROM:
+					from = FacebookUser.fromJSON( value );
+					break;
+				
+				default:
+					super.setPropertyValue( property, value );
+					break;
+			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override public function toString():String
+		{
+			return facebook_internal::toString( [ FacebookCommentField.ID, FacebookCommentField.MESSAGE ] );
+		}
+		
+	}
 }

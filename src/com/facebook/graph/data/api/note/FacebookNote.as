@@ -1,23 +1,20 @@
 package com.facebook.graph.data.api.note
 {
-	import com.adobe.utils.DateUtil;
-	import com.facebook.graph.data.api.user.FacebookUser;
+	import com.facebook.graph.core.facebook_internal;
+	import com.facebook.graph.data.api.core.AbstractFacebookGraphObject;
+	
+	use namespace facebook_internal;
 	
 	/**
 	 * A Facebook note.
 	 * @see http://developers.facebook.com/docs/reference/api/note
 	 */
-	public class FacebookNote
+	public class FacebookNote extends AbstractFacebookGraphObject
 	{
 		/**
-		 * The note ID.
+		 * The profile that created the note.
 		 */
-		public var id:String;
-		
-		/**
-		 * The ID of the user who posted the note.
-		 */
-		public var from:FacebookUser;
+		public var from:Object;
 		
 		/**
 		 * The title of the note.
@@ -25,7 +22,7 @@ package com.facebook.graph.data.api.note
 		public var subject:String;
 		
 		/**
-		 * The note content, an HTML string.
+		 * The content of the note.
 		 */
 		public var message:String;
 		
@@ -40,7 +37,7 @@ package com.facebook.graph.data.api.note
 		public var updated_time:Date;
 		
 		/**
-		 * The note icon that Facebook displays with notes.
+		 * The icon that Facebook displays with notes.
 		 */
 		public var icon:String;
 		
@@ -52,43 +49,25 @@ package com.facebook.graph.data.api.note
 		}
 		
 		/**
-		 * Populates the note from a decoded JSON object.
+		 * Populates and returns a new FacebookNote from a decoded JSON object.
+		 * 
+		 * @param result A decoded JSON object.
+		 * 
+		 * @return A new FacebookNote.
 		 */
-		public function fromJSON( result:Object ):void
+		public static function fromJSON( result:Object ):FacebookNote
 		{
-			if( result != null )
-			{
-				for( var property:String in result )
-				{
-					switch( property )
-					{
-						case "from":
-							from = new FacebookUser();
-							from.fromJSON( result[ property ] );
-							break;
-						
-						case "created_time":
-							created_time = DateUtil.parseW3CDTF( result[ property ] );
-							break;
-						
-						case "updated_time":
-							updated_time = DateUtil.parseW3CDTF( result[ property ] );
-							break;
-						
-						default:
-							if( hasOwnProperty( property ) ) this[ property ] = result[ property ];
-							break;
-					}
-				}
-			}
+			var note:FacebookNote = new FacebookNote();
+			note.fromJSON( result );
+			return note;
 		}
 		
 		/**
-		 * Provides the string value of the note.
+		 * @inheritDoc
 		 */
-		public function toString():String
+		override public function toString():String
 		{
-			return '[ id: ' + id + ', subject: ' + subject + ' ]';
+			return facebook_internal::toString( [ FacebookNoteField.ID, FacebookNoteField.SUBJECT ] );
 		}
 		
 	}

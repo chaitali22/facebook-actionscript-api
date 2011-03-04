@@ -1,27 +1,23 @@
 package com.facebook.graph.data.api.photo
 {
-	import com.adobe.utils.DateUtil;
+	import com.facebook.graph.core.facebook_internal;
+	import com.facebook.graph.data.api.core.AbstractFacebookGraphObject;
+	
+	use namespace facebook_internal;
 	
 	/**
-	 * An individual photo.
+	 * An individual photo within an album.
 	 * @see http://developers.facebook.com/docs/reference/api/photo
 	 */
-	public class FacebookPhoto
+	public class FacebookPhoto extends AbstractFacebookGraphObject
 	{
 		/**
-		 * The photo ID.
-		 */
-		public var id:String;
-		
-		/**
-		 * An object containing the name and ID of the user who posted the photo.
-		 * This may be a user or a Page.
+		 * The profile (user or page) that posted this photo.
 		 */
 		public var from:Object;
 		
 		/**
-		 * An array containing the users and their positions in this photo.
-		 * The x and y coordinates are percentages from the left and top edges of the photo, respectively.
+		 * The tagged users and their positions in this photo.
 		 */
 		public var tags:Array;
 		
@@ -29,11 +25,6 @@ package com.facebook.graph.data.api.photo
 		 * The caption given to this photo.
 		 */
 		public var name:String;
-		
-		/**
-		 * The album-sized view of the photo.
-		 */
-		public var picture:String;
 		
 		/**
 		 * The icon that Facebook displays when photos are published to the Feed.
@@ -46,12 +37,12 @@ package com.facebook.graph.data.api.photo
 		public var source:String;
 		
 		/**
-		 * The height of the photo, in pixels.
+		 * The height of the photo in pixels.
 		 */
 		public var height:int;
 		
 		/**
-		 * The width of the photo, in pixels.
+		 * The width of the photo in pixels.
 		 */
 		public var width:int;
 		
@@ -61,18 +52,12 @@ package com.facebook.graph.data.api.photo
 		public var link:String;
 		
 		/**
-		 * An Array of objects containing the different sized versions of Facebook Photos.
-		 * Contents contain a "source", "height" and "width" parameter.
-		 */
-		public var images:Array;
-		
-		/**
 		 * The time the photo was initially published.
 		 */
 		public var created_time:Date;
 		
 		/**
-		 * The last time the photo or its caption were updated.
+		 * The last time the photo or its caption was updated.
 		 */
 		public var updated_time:Date;
 		
@@ -84,46 +69,47 @@ package com.facebook.graph.data.api.photo
 		}
 		
 		/**
-		 * Populates the photo from a decoded JSON object.
+		 * Populates and returns a new FacebookPhoto from a decoded JSON object.
+		 * 
+		 * @param result A decoded JSON object.
+		 * 
+		 * @return A new FacebookPhoto.
 		 */
-		public function fromJSON( result:Object ):void
+		public static function fromJSON( result:Object ):FacebookPhoto
 		{
-			if( result != null )
+			var photo:FacebookPhoto = new FacebookPhoto();
+			photo.fromJSON( result );
+			return photo;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override protected function setPropertyValue( property:String, value:* ):void
+		{
+			switch( property )
 			{
-				for( var property:String in result )
-				{
-					switch( property )
+				case FacebookPhotoField.TAGS:
+					tags = [];
+					var tagsData:Array = value is Array ? value : Object( value ).hasOwnProperty( "data" ) && value.data is Array ? value.data : [];
+					for each( var tagData:Object in tagsData )
 					{
-						case "created_time":
-							created_time = DateUtil.parseW3CDTF( result[ property ] );
-							break;
-						
-						case "updated_time":
-							updated_time = DateUtil.parseW3CDTF( result[ property ] );
-							break;
-						
-						case "tags":
-							tags = result[ property ].data as Array;
-							break;
-						
-						case "images":
-							images = result[ property ].data as Array;
-							break;
-						
-						default:
-							if( hasOwnProperty( property ) ) this[ property ] = result[ property ];
-							break;
+						tags.push( FacebookPhotoTag.fromJSON( tagData ) );
 					}
-				}
+					break;
+				
+				default:
+					super.setPropertyValue( property, value );
+					break;
 			}
 		}
 		
 		/**
-		 * Provides the string value of the photo.
+		 * @inheritDoc
 		 */
-		public function toString():String
+		override public function toString():String
 		{
-			return '[ id: ' + id + ', name: ' + name + ' ]';
+			return facebook_internal::toString( [ FacebookPhotoField.ID, FacebookPhotoField.NAME ] );
 		}
 		
 	}

@@ -1,7 +1,7 @@
 package com.facebook.graph.data.fql.user
 {
-	import com.adobe.utils.DateUtil;
 	import com.facebook.graph.data.api.user.FacebookUser;
+	import com.facebook.graph.utils.FacebookDataUtils;
 	
 	/**
 	 * VO to hold information about a queried user.
@@ -11,7 +11,7 @@ package com.facebook.graph.data.fql.user
 		/**
 		 * The user ID of the user being queried.
 		 */
-		public var uid:int;
+		public var uid:Number;
 		
 		/**
 		 * The first name of the user being queried.
@@ -125,7 +125,7 @@ package com.facebook.graph.data.fql.user
 		/**
 		 * The user ID of the partner (for example, husband, wife, boyfriend, girlfriend) of the user being queried.
 		 */
-		public var significant_other_id:int;
+		public var significant_other_id:Number;
 		
 		/**
 		 * The political views of the user being queried.
@@ -343,6 +343,12 @@ package com.facebook.graph.data.fql.user
 		public var email:String;
 		
 		/**
+		 * A string containing an anonymous, but unique identifier for the user.
+		 * You can use this identifier with third-parties..
+		 */
+		public var third_party_id:String;
+		
+		/**
 		 * Creates a new FQLUser.
 		 */
 		public function FQLUser()
@@ -362,7 +368,7 @@ package com.facebook.graph.data.fql.user
 					{
 						case "profile_update_time":
 						case "birthday_date":
-							if( hasOwnProperty( property ) ) this[ property ] = DateUtil.parseW3CDTF( result[ property ] );
+							if( hasOwnProperty( property ) ) this[ property ] = FacebookDataUtils.stringToDate( result[ property ] );
 							break;
 						
 						default:
@@ -379,7 +385,7 @@ package com.facebook.graph.data.fql.user
 		public function toFacebookUser():FacebookUser
 		{
 			var facebookUser:FacebookUser = new FacebookUser();
-			facebookUser.id = uid > 0 ? uid.toString() : null;
+			facebookUser.id = !isNaN( uid ) ? uid.toString() : null;
 			facebookUser.first_name = first_name;
 			facebookUser.last_name = last_name;
 			facebookUser.name = name;
@@ -401,7 +407,7 @@ package com.facebook.graph.data.fql.user
 			facebookUser.religion = religion;
 			facebookUser.political = political;
 			facebookUser.verified = verified;
-			if( significant_other_id > 0 )
+			if( !isNaN( significant_other_id ) )
 			{
 				facebookUser.significant_other = new FacebookUser();
 				facebookUser.significant_other.id = significant_other_id.toString();

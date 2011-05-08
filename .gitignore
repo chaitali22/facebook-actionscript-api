@@ -1,9 +1,13 @@
+#Mac
+.DS_Store
 
-/src/assets
-/src/com/adobe
-/bin
-/.actionScriptProperties
-/.flexLibProperties
-/.fxpProperties
-/.project
-/.settings
+#Flash Builder
+.actionScriptProperties
+.flexProperties
+.flexLibProperties
+.project
+.settings
+bin/*
+bin-debug/*
+bin-release/*
+bin-test/*

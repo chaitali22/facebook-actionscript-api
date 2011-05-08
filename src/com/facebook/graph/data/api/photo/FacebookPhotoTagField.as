@@ -1,4 +1,4 @@
-package com.facebook.graph.data.api.photo.tag
+package com.facebook.graph.data.api.photo
 {
 	public class FacebookPhotoTagField
 	{

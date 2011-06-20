@@ -356,6 +356,20 @@ package com.facebook.graph.data.fql.user
 		}
 		
 		/**
+		 * Populates and returns a new FQLUser from a decoded JSON object.
+		 * 
+		 * @param result A decoded JSON object.
+		 * 
+		 * @return A new FQLUser.
+		 */
+		public static function fromJSON( result:Object ):FQLUser
+		{
+			var user:FQLUser = new FQLUser();
+			user.fromJSON( result );
+			return user;
+		}
+		
+		/**
 		 * Populates the user from a decoded JSON object.
 		 */
 		public function fromJSON( result:Object ):void

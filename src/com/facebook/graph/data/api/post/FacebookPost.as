@@ -68,9 +68,9 @@ package com.facebook.graph.data.api.post
 		public var icon:String;
 		
 		/**
-		 * A string indicating which application was used to create this post.
+		 * An object containing the name and id of the application used to create this post.
 		 */
-		public var attribution:String;
+		public var application:FacebookPostApplication;
 		
 		/**
 		 * A list of available actions on the post (including commenting, liking, and an optional app-specified action).
@@ -136,6 +136,10 @@ package com.facebook.graph.data.api.post
 				
 				case FacebookPostField.PRIVACY:
 					privacy = FacebookPostPrivacy.fromJSON( value );
+					break;
+				
+				case FacebookPostField.APPLICATION:
+					application = FacebookPostApplication.fromJSON( value );
 					break;
 				
 				default:

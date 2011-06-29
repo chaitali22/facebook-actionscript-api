@@ -18,7 +18,7 @@ package com.facebook.graph.data.api.post
 		public static const DESCRIPTION:String = "description";
 		public static const SOURCE:String = "source";
 		public static const ICON:String = "icon";
-		public static const ATTRIBUTION:String = "attribution";
+		public static const APPLICATION:String = "application";
 		public static const ACTIONS:String = "actions";
 		public static const PRIVACY:String = "privacy";
 		public static const CREATED_TIME:String = "created_time";

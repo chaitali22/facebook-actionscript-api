@@ -274,7 +274,8 @@ package com.facebook.graph.core {
                             + '/'
                             + id
                             + '/picture'
-                            + (type != null?'?type=' + type:'');
+                            + (type != null?'?type=' + type:'')
+                            + (type != null?'&':'?')+'access_token=' + session.accessToken;
         }
     }
 }
